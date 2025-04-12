@@ -1,0 +1,21 @@
+# macOS system files
+.DS_Store
+
+# VS Code settings
+.vscode/
+
+# Rust build output
+target/
+
+# Node build output (if you have frontend)
+dist/
+build/
+
+# Environment files
+.env
+
+# Logs
+*.log
+
+# wasm artifacts
+*.wasm

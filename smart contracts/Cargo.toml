@@ -1,0 +1,35 @@
+[package]
+name = "rad_run_scores"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[[bin]]
+name = "contract"
+path = "src/bin/contract.rs"
+required-features = ["contract"]
+
+[[bin]]
+name = "service"
+path = "src/bin/service.rs"
+required-features = ["service"]
+
+[dependencies]
+async-trait = "0.1.77"
+linera-sdk = "0.13.1"
+linera-views = "0.13.1"
+linera-views-derive = "0.13.1"
+serde = { version = "1.0", features = ["derive"] }
+async-graphql = "4.0"
+futures = "0.3"
+
+[features]
+contract = []
+service = []
+
+[dev-dependencies]
+assert_matches = "1.5"
+tokio = { version = "1.0", features = ["rt", "sync"] }
+
