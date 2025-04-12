@@ -1,21 +1,40 @@
-# macOS system files
+# Ignore project-level temp and build folders
+[Ll]ibrary/
+[Tt]emp/
+[Bb]uild/
+[Bb]uilds/
+[Oo]bj/
+[Bb]in/
+
+# Unity-generated user files
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# OS-specific
 .DS_Store
+*.swp
+*.lock
+*.tmp
 
-# VS Code settings
-.vscode/
+# Crash logs
+sysinfo.txt
+crash-reports/
 
-# Rust build output
-target/
+# Ignore WebGL build output and artifacts
+snowboarding game/Library/
+snowboarding game/Build/
+snowboarding game/Builds/
+snowboarding game/obj/
+snowboarding game/Temp/
 
-# Node build output (if you have frontend)
-dist/
-build/
-
-# Environment files
-.env
-
-# Logs
-*.log
-
-# wasm artifacts
-*.wasm
+# Ignore Linera build outputs
+smart contracts/target/
+smart contracts/.cargo/
+smart contracts/Cargo.lock
