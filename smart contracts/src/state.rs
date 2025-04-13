@@ -1,23 +1,19 @@
-// Copyright (c) Zefchain Labs, Inc.
-// SPDX-License-Identifier: Apache-2.0
-
-use linera_sdk::base::{AbiError, AbiResult};
-use linera_sdk::view::View;
+use linera_sdk::base::Owner;
+use linera_views::{common::Context, views::View, views::MapView};
 use serde::{Deserialize, Serialize};
+use linera_views::views::{ViewError, View};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, View)]
 pub struct RadRunScores {
-    pub value: u64,
+    pub scores: MapView<Owner, u64>,
 }
 
-impl View for RadRunScores {
-    type Error = AbiError;
-
-    fn load() -> AbiResult<Self> {
-        Ok(RadRunScores { value: 0 })
+impl RadRunScores {
+    pub fn new(context: &Context) -> Self {
+        Self {
+            scores: MapView::new(context.clone()),
+        }
     }
+}
 
-    fn store(&self) -> AbiResult<()> {
-        Ok(())
-    }
-} 
+pub type RadRunScoresState = RadRunScores;

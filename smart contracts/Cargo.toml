@@ -4,32 +4,31 @@ version = "0.1.0"
 edition = "2021"
 
 [lib]
+name = "rad_run_scores"
+path = "src/lib.rs"
 crate-type = ["cdylib", "rlib"]
 
-[[bin]]
-name = "contract"
-path = "src/bin/contract.rs"
-required-features = ["contract"]
-
-[[bin]]
-name = "service"
-path = "src/bin/service.rs"
-required-features = ["service"]
-
 [dependencies]
-async-trait = "0.1.77"
+async-trait = "0.1"
 linera-sdk = "0.13.1"
-linera-views = "0.13.1"
-linera-views-derive = "0.13.1"
+async-graphql = "7.0" # required for GraphQL queries in service.rs
 serde = { version = "1.0", features = ["derive"] }
-async-graphql = "4.0"
-futures = "0.3"
+thiserror = "1.0"
 
-[features]
-contract = []
-service = []
+# Optional if you're using JSON serialization in your service or testing
+serde_json = "1.0"
 
-[dev-dependencies]
-assert_matches = "1.5"
-tokio = { version = "1.0", features = ["rt", "sync"] }
+# Required for building the state views
+linera-views = "0.13.1"
 
+# Required for building views with derive macros like `#[derive(RootView)]`
+linera-sdk-derive = "0.13.1"
+linera-base = "0.13.1"
+
+[[bin]]
+name = "rad_run_scores-contract"
+path = "src/contract.rs"
+
+[[bin]]
+name = "rad_run_scores-service"
+path = "src/service.rs"

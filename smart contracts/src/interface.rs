@@ -1,49 +1,18 @@
-// Copyright (c) Zefchain Labs, Inc.
-// SPDX-License-Identifier: Apache-2.0
+use linera_views::views::ViewError;
+use linera_sdk::views::ViewStorageContext;
+use crate::state::RadRunScores;
+use linera_sdk::base::Owner;
 
-use async_graphql::{Context, Object, Schema, SimpleObject};
-use linera_sdk::{
-    base::{ApplicationId, SessionId},
-    views::{View, ViewError},
-    Service,
-};
-use serde::{Deserialize, Serialize};
-use async_trait::async_trait;
-use linera_sdk::{
-    base::{WithInterfaceAbi, InterfaceAbi},
-    interface::Interface,
-};
-use crate::{RadRunScores, RadRunScoresAbi};
+pub type RadRunScoresInterface = RadRunScores;
 
-#[derive(Debug, Deserialize, Serialize)]
-pub enum Query {
-    GetScore,
+pub struct RadRunInterface {
+    pub state: RadRunScoresInterface,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
-pub struct Score {
-    pub value: u64,
-}
-
-pub struct RadRunScoresInterface {
-    state: RadRunScores,
-}
-
-impl WithInterfaceAbi for RadRunScoresInterface {
-    type Abi = RadRunScoresAbi;
-}
-
-#[async_trait]
-impl Interface for RadRunScoresInterface {
-    type Query = Query;
-    type Error = ViewError;
-
-    async fn query(&self, query: Self::Query) -> Result<Score, Self::Error> {
-        match query {
-            Query::GetScore => {
-                let score = self.state.get_score().await?;
-                Ok(Score { value: score })
-            }
-        }
+impl RadRunInterface {
+    pub fn new(context: ViewStorageContext) -> Result<Self, ViewError> {
+        Ok(Self {
+            state: RadRunScores::new(context)?,
+        })
     }
 }
