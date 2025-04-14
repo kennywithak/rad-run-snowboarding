@@ -1,10 +1,14 @@
-# Ignore project-level temp and build folders
+# === UNITY PROJECT IGNORE RULES ===
+
+# Unity build & temp folders
 [Ll]ibrary/
 [Tt]emp/
 [Bb]uild/
 [Bb]uilds/
 [Oo]bj/
 [Bb]in/
+sysinfo.txt
+crash-reports/
 
 # Unity-generated user files
 *.csproj
@@ -17,24 +21,40 @@
 *.booproj
 *.svd
 
-# OS-specific
+# OS-generated files
 .DS_Store
 *.swp
 *.lock
 *.tmp
+*.log
+*.bak
+*.orig
 
-# Crash logs
-sysinfo.txt
-crash-reports/
-
-# Ignore WebGL build output and artifacts
+# WebGL/Build output
 snowboarding game/Library/
 snowboarding game/Build/
 snowboarding game/Builds/
 snowboarding game/obj/
 snowboarding game/Temp/
 
-# Ignore Linera build outputs
+# VS Code workspace files
+.vscode/
+snowboarding game/.vscode/
+
+# Unity user settings (optional to ignore if working in team)
+# snowboarding game/UserSettings/
+
+# === LINERA SMART CONTRACTS ===
+
+# Rust build artifacts
 smart contracts/target/
 smart contracts/.cargo/
-smart contracts/Cargo.lock
+
+# Uncomment the next line if you want to ignore Cargo.lock
+# (Not recommended for apps, usually include this)
+# smart contracts/Cargo.lock
+
+# === GIT FILES ===
+
+# Git metadata
+*.orig
