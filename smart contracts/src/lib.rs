@@ -1,20 +1,7 @@
-use serde::{Deserialize, Serialize};
-
-pub mod interface;
+pub mod abi;
 pub mod state;
+pub mod error;
+pub mod query;
 
-#[derive(Debug, Deserialize, Serialize)]
-pub enum Operation {
-    SetScore(u64),
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub enum Message {}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub enum Query {
-    GetTopScores(u32),
-}
-
-pub use crate::state::RadRunScores;
-pub use crate::state::RadRunScoresState;
+pub use abi::RadRunScoresAbi;
+pub use state::RadRunScores;

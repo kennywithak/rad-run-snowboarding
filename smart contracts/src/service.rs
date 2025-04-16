@@ -1,47 +1,67 @@
-use linera_sdk::service::*;
-use linera_base::abi::{ServiceAbi, WithServiceAbi};
-use linera_views::views::ViewError;
-use rad_run_scores::RadRunScores;
+#![cfg_attr(target_arch = "wasm32", no_main)]
+
+use std::sync::{Arc, Mutex};
+use async_graphql::{Request, Response, Schema, EmptyMutation, EmptySubscription, Object};
+use linera_sdk::base::WithServiceAbi;
+use linera_sdk::{service, Service, ServiceRuntime, ViewStateStorage};
 
 use crate::state::RadRunScores;
+use crate::query::Query;
+use crate::error::ServiceError;
+use crate::RadRunScoresAbi;
 
-#[derive(Default, WithServiceAbi)]
 pub struct RadRunScoresService {
-    pub state: RadRunScores,
+    state: Arc<RadRunScores>,
+    runtime: Arc<Mutex<ServiceRuntime<Self>>>,
 }
 
-impl Service for RadRunScoresService {
-    type Error = ViewError;
-    type Storage = RadRunScores;
-    type Message = ();
-    type State = RadRunScores;
-    type Query = ();
+service!(RadRunScoresService);
 
-    async fn handle_query(
-        &self,
-        _query: Self::Query,
-    ) -> Result<Vec<Message>, Self::Error> {
-        Ok(vec![])
-    }
+impl WithServiceAbi for RadRunScoresService {
+    type Abi = RadRunScoresAbi;
 }
 
-impl ServiceAbi for RadRunScoresService {
-    type Query = rad_run_scores::Operation;
-    type QueryResponse = u64;
+#[derive(Clone)]
+struct QueryRoot {
+    service: RadRunScoresService,
 }
 
-#[async_trait::async_trait]
-impl Service for RadRunScoresService {
-    async fn handle_query(
-        &self,
-        query: Self::Query,
-    ) -> Result<Self::QueryResponse, ViewError> {
-        match query {
-            rad_run_scores::Operation::GetScore { owner } => {
-                Ok(self.state.scores.get(&owner)?.unwrap_or(0))
+#[Object]
+impl QueryRoot {
+    async fn top_scores(&self, limit: usize) -> Vec<(String, u64)> {
+        let mut all_scores = Vec::new();
+        let entries = self.service.state.scores.indices().await.unwrap();
+
+        for owner in entries {
+            if let Some(score) = self.service.state.scores.get(&owner).await.unwrap_or(None) {
+                all_scores.push((owner.to_string(), score));
             }
         }
+
+        all_scores.sort_by(|a, b| b.1.cmp(&a.1));
+        all_scores.into_iter().take(limit).collect()
     }
 }
 
-fn main() {}
+#[linera_sdk::async_trait]
+impl Service for RadRunScoresService {
+    type Error = ServiceError;
+    type State = RadRunScores;
+    type Storage = ViewStateStorage<Self>;
+
+    async fn new(state: Self::State, runtime: ServiceRuntime<Self>) -> Result<Self, Self::Error> {
+        Ok(Self {
+            state: Arc::new(state),
+            runtime: Arc::new(Mutex::new(runtime)),
+        })
+    }
+
+    async fn handle_query(&self, request: Request) -> Result<Response, Self::Error> {
+        let schema = Schema::build(
+            QueryRoot {
+                service: self.clone(),
+            },
+            EmptyMutation,
+            EmptySubscription
+::contentReference[oaicite:0]{index=0}
+ 

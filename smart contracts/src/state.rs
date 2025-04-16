@@ -1,19 +1,10 @@
-use linera_sdk::base::Owner;
-use linera_views::{context::Context, map_view::MapView, views::View};
-use serde::{Deserialize, Serialize};
-use linera_views::views::{ViewError, View};
+use linera_views::views::RootView;
+use linera_base::owner::Owner;
+use linera_sdk::views::{RootView, ViewStorageContext, MapView};
+use linera_sdk::views::View; // for .load(), .save(), etc.
 
-#[derive(Debug, Serialize, Deserialize, View)]
-pub struct RadRunScores<C> {
-    pub scores: MapView<C, Owner, u64>,
+#[derive(RootView)]
+#[view(context = "ViewStorageContext")]
+pub struct RadRunScores {
+    pub scores: MapView<Owner, u64>,
 }
-
-impl<C> RadRunScores<C> {
-    pub fn new(context: C) -> Self {
-        Self {
-            scores: MapView::new(context),
-        }
-    }
-}
-
-pub type RadRunScoresState = RadRunScores<Context>;
